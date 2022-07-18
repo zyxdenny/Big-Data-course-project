@@ -81,7 +81,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-.idea
+#.idea
 cmake-build-debug
 cmake-build-release
 
@@ -96,5 +96,4 @@ xmake.lua
 # Personalized  Put your /target /.idea or other ide generations here
 .cache
 .vscode
-#HDF5_process/.idea
 HDF5_process/target
