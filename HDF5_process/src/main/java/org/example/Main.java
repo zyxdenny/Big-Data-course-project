@@ -26,7 +26,9 @@ public class Main {
                 Dataset dataset = hdfFile.getDatasetByPath(args[1]);
                 // data will be a java array of the dimensions of the HDF5 dataset
                 Object data = dataset.getData();
+                System.out.println("Current print "+args[1]+": ");
                 System.out.println(ArrayUtils.toString(data)); //NOSONAR - sout in example
+                // you can set a breakpoint here to see the detailed content of data
             }
         }
 
