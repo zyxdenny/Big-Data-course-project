@@ -12,6 +12,7 @@ import io.jhdf.HdfFile;
 import org.apache.avro.Schema;
 import org.apache.avro.file.CodecFactory;
 import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
@@ -34,9 +35,10 @@ public class CompactSmallFiles {
         }
         System.out.println("Serialize initialize ......");
         Schema schema = new Schema.Parser().parse(new File(this.avsc_dir));
+        Schema schemaBackup= new Schema.Parser().parse(new File(this.avsc_dir));
         DatumWriter<GenericRecord> DatumWriter = new GenericDatumWriter<GenericRecord>(schema);
         DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(DatumWriter);
-        dataFileWriter.setCodec(CodecFactory.snappyCodec());
+        //dataFileWriter.setCodec(CodecFactory.snappyCodec());
         dataFileWriter.create(schema, new File(out_name));
         //DatumWriter<Csvfile> DatumWriter = new SpecificDatumWriter<Csvfile>(Csvfile.class);
         //DataFileWriter<Csvfile> dataFileWriter = new DataFileWriter<Csvfile>(DatumWriter);
@@ -51,6 +53,9 @@ public class CompactSmallFiles {
             Charset charset = StandardCharsets.US_ASCII;
             //todo set data to special field
             H5_parser h5_parser = new H5_parser(1, new HdfFile(file));
+            h5_parser.storeData();
+            GenericRecord genericRecord = h5_parser.fillSchema(schemaBackup);
+            dataFileWriter.append(genericRecord);
 
 
         /*
@@ -97,7 +102,7 @@ public class CompactSmallFiles {
         //https://docs.oracle.com/javase/tutorial/essential/io/dirs.html
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Path)) {
             for (Path file: stream) {
-                if (file.getFileName().toString().contains(".csv")){
+                if (file.getFileName().toString().contains(".h5")){
                     this.all_files.add(file);
                 }
 
@@ -116,4 +121,36 @@ public class CompactSmallFiles {
             System.out.println(a.toRealPath());
         }
     }
+
+    @Deprecated //to be deleted
+    public void fillSchema (H5_parser h5_parser,Schema schema){
+        Map<String,?> all_data=h5_parser.getAll_data();
+        all_data.forEach((key, value) -> {
+            Schema newSchema=schema;
+            List<String> Key_list=new ArrayList<String>();
+            //key=key.substring(1);
+            while (key.contains("/")){
+                key=key.substring(key.indexOf("/")+1);
+                if (key.contains("/")){
+                    String fieldName = key.substring(0,key.indexOf("/"));
+
+                    newSchema = newSchema.getField(fieldName).schema();
+                    Key_list.add(fieldName);
+                }else {
+                    //last separation
+                    String fieldName = key.substring(0);
+                    /*if (fieldName == "time_signature"){
+                        System.out.println("haha");
+                    }*/
+                    Key_list.add(fieldName);
+                }
+            }
+
+            System.out.println(Key_list.size()+" "+Key_list.toString()+" "+value);
+
+        });
+    }
+
+
+
 }

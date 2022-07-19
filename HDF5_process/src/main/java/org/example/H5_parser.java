@@ -1,8 +1,12 @@
 package org.example;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jhdf.HdfFile;
 import io.jhdf.api.Dataset;
 import io.jhdf.api.Group;
 import io.jhdf.api.Node;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +17,7 @@ public class H5_parser {
     int para=0;
     private HdfFile hdfFile;
     private List<String> nodes_path_list=new ArrayList<String>();
-    private Map<Object,Object> all_data=new HashMap<Object, Object>();
+    private Map<String,Object> all_data=new HashMap<String, Object>();
     public H5_parser(int para,HdfFile hdfFile){
         this.para=para;
         this.hdfFile=hdfFile;
@@ -40,17 +44,20 @@ public class H5_parser {
 
     //todo: verify whether the load path is correct comparing the print results
     //todo: They should only differentiate in the folder
-    public void recursivePrintGroup(Group group, int level) {
+    public void recursivePrintGroup(Group group, int level, Boolean is_indent) {
         level++;
         String indent = StringUtils.repeat("    ", level);
         for (Node node : group) {
-            System.out.println(indent + node.getName()); //NOSONAR - sout in example
+            if (is_indent){
+                System.out.println(indent + node.getName()); //NOSONAR - sout in example
+            }
             System.out.println(node.getPath());
             if (node instanceof Group) {
-                recursivePrintGroup((Group) node, level);
+                recursivePrintGroup((Group) node, level,is_indent);
             }
         }
     }
+
 
     public void printPath (){
         for (String s:this.nodes_path_list
@@ -164,7 +171,51 @@ public class H5_parser {
         return null;
     }
 
-    public Map<Object, Object> getAll_data() {
+    public Map<String, Object> getAll_data() {
         return all_data;
+    }
+
+    public GenericRecord fillSchema(Schema schema){
+        return this.fillSchemaHelper(this.hdfFile,schema);
+    }
+
+    public GenericRecord fillSchemaHelper(Group group, Schema schema) {
+        GenericRecord genericRecord = new GenericData.Record(schema);
+
+        for (Node node : group) {
+            /*if (schema.getField(node.getName()) == null) {
+                System.out.println(node.getName());
+                continue;
+            }*/ //todo:verify whether need
+
+            if (node instanceof Group) {
+                Schema newSchema = schema.getField(node.getName()).schema();
+                genericRecord.put(node.getName(), fillSchemaHelper((Group) node, newSchema));
+                //System.out.println("Current Group location: "+node.getName());
+            } else {
+                /*System.out.println("Current location: "+node.getName());
+                if (this.all_data.get(node.getPath())==null){
+                    System.out.println("haha");
+                }//debug usage */
+                Object data=this.hdfFile.getDatasetByPath(node.getPath()).getData();
+                if (data instanceof LinkedHashMap){
+                    Schema newSchema = schema.getField(node.getName()).schema();
+                    GenericRecord newRecord = new GenericData.Record(newSchema);
+
+                    ((LinkedHashMap<?, ?>) data).forEach((key, value) -> {
+                        if (newSchema.getField(key.toString()) != null) {
+                            newRecord.put(key.toString(), this.all_data.get(node.getPath()+"/"+key.toString()));
+                        }
+                    });
+
+                    genericRecord.put(node.getName(), newRecord);
+                }else {
+                    genericRecord.put(node.getName(), this.all_data.get(node.getPath()));
+                }
+
+
+            }
+        }
+        return genericRecord;
     }
 }

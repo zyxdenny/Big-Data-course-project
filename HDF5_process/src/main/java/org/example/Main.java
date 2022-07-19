@@ -2,6 +2,7 @@ package org.example;
 import io.jhdf.HdfFile;
 import io.jhdf.api.Dataset;
 import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.commons.lang3.ArrayUtils;
 import org.example.H5_parser;
 
@@ -24,15 +25,23 @@ public class Main {
             System.out.println(schema.getFields());
             System.out.println(hdfFile.getFile().getName()); //NOSONAR - sout in example
             H5_parser h5_parser=new H5_parser(2,hdfFile);
-            //h5_parser.recursivePrintGroup(hdfFile, 0);
-            //h5_parser.printPath();
+            h5_parser.printPath();
             if (Objects.equals(args[1], "1")){
                 h5_parser.printData();
             } else if (Objects.equals(args[1], "2")) {
                 h5_parser.printDataType();
             }else if (Objects.equals(args[1], "3")){
-                h5_parser.storeData();
-                System.out.println(h5_parser.getAll_data().toString());
+                System.out.println("Avro begin!");
+
+                CompactSmallFiles c=new CompactSmallFiles("./src/avro/song.avsc");
+                //GenericRecord record= h5_parser.fillSchema(schema); debug usage
+                c.serialize("./test","trial_avro.txt");
+                System.out.println("here");
+
+                //System.out.println(h5_parser.getAll_data().toString());
+            }else if (Objects.equals(args[1], "p")){
+                System.out.println("start print group!");
+                h5_parser.recursivePrintGroup(hdfFile, 0,false);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
