@@ -7,15 +7,13 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class H5_parser {
     int para=0;
     private HdfFile hdfFile;
     private List<String> nodes_path_list=new ArrayList<String>();
+    private Map<Object,Object> all_data=new HashMap<Object, Object>();
     public H5_parser(int para,HdfFile hdfFile){
         this.para=para;
         this.hdfFile=hdfFile;
@@ -60,7 +58,26 @@ public class H5_parser {
             System.out.println(s);
         }
     }
+    public void storeData (){
+        for (String s:this.nodes_path_list
+        ) {
+            this.hdfFile.getFile();
+            Dataset dataset = this.hdfFile.getDatasetByPath(s);
+            // data will be a java array of the dimensions of the HDF5 dataset
+            Object data = dataset.getData();
 
+            if (data instanceof LinkedHashMap){
+                ((LinkedHashMap<?, ?>) data).forEach((key, value) -> {
+                    System.out.println("Current store "+s+"/"+key.toString()+": ");
+                    this.all_data.put(s+"/"+key.toString(),retrieveCompoundData(value));
+                });
+            }else {
+                System.out.println("Current store "+s+": ");
+                this.all_data.put(s,retrieveCompoundData(data));
+            }
+
+        }
+    }
     public void printData (){
         for (String s:this.nodes_path_list
         ) {
@@ -145,5 +162,9 @@ public class H5_parser {
             return res;
         }
         return null;
+    }
+
+    public Map<Object, Object> getAll_data() {
+        return all_data;
     }
 }
