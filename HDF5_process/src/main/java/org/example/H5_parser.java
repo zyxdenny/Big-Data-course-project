@@ -4,10 +4,13 @@ import io.jhdf.api.Dataset;
 import io.jhdf.api.Group;
 import io.jhdf.api.Node;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class H5_parser {
     int para=0;
@@ -63,10 +66,84 @@ public class H5_parser {
         ) {
             this.hdfFile.getFile();
             Dataset dataset = this.hdfFile.getDatasetByPath(s);
+
+
             // data will be a java array of the dimensions of the HDF5 dataset
             Object data = dataset.getData();
             System.out.println("Current print "+s+": ");
-            System.out.println(ArrayUtils.toString(data));
+            if (data instanceof LinkedHashMap){
+                ((LinkedHashMap<?, ?>) data).forEach((key, value) -> {
+                   System.out.println(key.toString()+" "+retrieveCompoundData(value).toString());
+                });
+            }else {
+                System.out.println(ArrayUtils.toString(data));
+            }
+
         }
+    }
+
+    public void printDataType (){
+        for (String s:this.nodes_path_list
+        ) {
+            this.hdfFile.getFile();
+            Dataset dataset = this.hdfFile.getDatasetByPath(s);
+
+
+            // data will be a java array of the dimensions of the HDF5 dataset
+            Object data = dataset.getData();
+            System.out.println("Current print "+s+": ");
+            if (data instanceof LinkedHashMap){
+                ((LinkedHashMap<?, ?>) data).forEach((key, value) -> {
+                    System.out.println(key.toString()+" "+value.getClass());
+                });
+            }else {
+                System.out.println(ArrayUtils.toString(data.getClass()));
+            }
+
+        }
+    }
+
+    //@Retrieve data from compound data form (array) (like in songs) List<?>
+    private List<?> retrieveCompoundData(Object value){
+        if (value instanceof int[]){
+            List<Integer> res = new ArrayList<Integer>();
+            for (int i: (int[]) value
+                 ) {
+                res.add(i);
+            }
+
+            return res;
+        } else if (value instanceof double[]) {
+            List<Double> res = new ArrayList<Double>();
+            for (double i: (double[]) value
+            ) {
+                res.add(i);
+            }
+
+            return res;
+        } else if (value instanceof String[]) {
+            List<String> res = new ArrayList<String>();
+            for (String i: (String[]) value
+            ) {
+                res.add(i);
+            }
+
+            return res;
+        } else if (value instanceof  double[][]) {
+            //Current print /analysis/segments_pitches:
+            //class [[D
+            List<List<Double>> res = new ArrayList<>();
+
+            for (double[] i : (double[][]) value) {
+                List<Double> temp  = new ArrayList<Double>();
+                for (double j : i) {
+                    temp.add(j);
+                }
+                res.add(temp);
+            }
+
+            return res;
+        }
+        return null;
     }
 }
