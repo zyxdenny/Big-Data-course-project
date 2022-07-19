@@ -1,7 +1,9 @@
 package org.example;
 import io.jhdf.HdfFile;
+import io.jhdf.api.Dataset;
 import io.jhdf.api.Group;
 import io.jhdf.api.Node;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -9,9 +11,11 @@ import java.util.List;
 
 public class H5_parser {
     int para=0;
+    private HdfFile hdfFile;
     private List<String> nodes_path_list=new ArrayList<String>();
     public H5_parser(int para,HdfFile hdfFile){
         this.para=para;
+        this.hdfFile=hdfFile;
         if (!this.nodes_path_list.isEmpty()){
             this.nodes_path_list.clear();
         }
@@ -51,6 +55,18 @@ public class H5_parser {
         for (String s:this.nodes_path_list
              ) {
             System.out.println(s);
+        }
+    }
+
+    public void printData (){
+        for (String s:this.nodes_path_list
+        ) {
+            this.hdfFile.getFile();
+            Dataset dataset = this.hdfFile.getDatasetByPath(s);
+            // data will be a java array of the dimensions of the HDF5 dataset
+            Object data = dataset.getData();
+            System.out.println("Current print "+s+": ");
+            System.out.println(ArrayUtils.toString(data));
         }
     }
 }
