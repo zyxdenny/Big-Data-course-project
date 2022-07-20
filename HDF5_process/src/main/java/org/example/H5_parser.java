@@ -245,8 +245,10 @@ public class H5_parser {
         }
         return genericRecord;
     }
-    // effect: /musicbrainz/songs/year --> year
-    // used to fetch out the record from key to insert it at correct record for song_summary
+    /**
+     * effect: /musicbrainz/songs/year --> year
+     * used to fetch out the record from key to insert it at correct record for song_summary
+     */
     private String fetchLastRecord(String s){
 
         return s.substring(s.lastIndexOf("/")+1);

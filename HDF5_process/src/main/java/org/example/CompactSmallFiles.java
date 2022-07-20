@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.jhdf.HdfFile;
 import org.apache.avro.Schema;
@@ -124,7 +126,6 @@ public class CompactSmallFiles {
 
     }
 
-
     public void readDir(String dirName) {
         Path Path;
         Path= Paths.get(dirName);
@@ -143,6 +144,10 @@ public class CompactSmallFiles {
                 if (file.getFileName().toString().contains(".h5")){
                     this.all_files.add(file);
                 }
+                if (Files.isDirectory(file)){
+                    System.out.println("Dir find:"+file.toAbsolutePath());
+                    readDir(file.toAbsolutePath().toString());
+                }
 
             }
         } catch ( IOException  | DirectoryIteratorException x) {
@@ -151,6 +156,7 @@ public class CompactSmallFiles {
             System.err.println();
         }
         is_file_load=true;
+        System.out.println(this.all_files.size());
     }
 
     public void printDir() throws IOException {
@@ -159,6 +165,34 @@ public class CompactSmallFiles {
             System.out.println(a.toRealPath());
         }
     }
+
+
+
+/*
+    public void readDir(String dirName) {
+        Path Path;
+        Path= Paths.get(dirName);
+        //test for path correctness
+        //Path Full=hallPath.toAbsolutePath();
+        //System.out.format("toString: %s%n", Full.toString());
+        if (Files.notExists(Path)){
+            throw new RuntimeException("No Specified Path: " + dirName);
+        }/*else {
+            System.out.println("Path Valid!");
+        }
+
+        //https://docs.oracle.com/javase/tutorial/essential/io/dirs.html
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Path)) {
+            for (Path file: stream) {
+                if (file.getFileName().toString().contains(".h5")){
+                    this.all_files.add(file);
+                }
+
+            }
+        }
+        is_file_load=true;
+    }
+*/
 
     @Deprecated //to be deleted
     public void fillSchema (H5_parser h5_parser,Schema schema){

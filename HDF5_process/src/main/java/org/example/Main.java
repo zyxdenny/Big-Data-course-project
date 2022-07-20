@@ -51,6 +51,9 @@ public class Main {
                 c2.serializeSummary("./test","trial_summary.avro");
                 System.out.println("finished");
 
+            }else if (Objects.equals(args[1], "a")){
+                CompactSmallFiles c2=new CompactSmallFiles("./src/avro/song_summary.avsc");
+                c2.readDir("./test");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

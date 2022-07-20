@@ -97,3 +97,4 @@ xmake.lua
 .cache
 .vscode
 HDF5_process/target
+HDF5_process/test/
