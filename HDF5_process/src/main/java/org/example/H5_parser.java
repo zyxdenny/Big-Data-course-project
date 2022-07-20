@@ -16,6 +16,9 @@ import java.util.*;
 public class H5_parser {
     int para=0;
     private HdfFile hdfFile;
+    private List<String> summary_list = new ArrayList<String>();
+
+    private Boolean is_stored = false;
     private List<String> nodes_path_list=new ArrayList<String>();
     private Map<String,Object> all_data=new HashMap<String, Object>();
     public H5_parser(int para,HdfFile hdfFile){
@@ -25,6 +28,21 @@ public class H5_parser {
             this.nodes_path_list.clear();
         }
         this.load_path(hdfFile,0);
+        this.summary_list_init();
+
+    }
+
+    private void summary_list_init (){
+        this.summary_list.add("/musicbrainz/songs/year");
+        this.summary_list.add("/metadata/songs/song_hotttnesss");
+        this.summary_list.add("/analysis/songs/duration");
+        this.summary_list.add("/analysis/songs/energy");
+        this.summary_list.add("/analysis/songs/tempo");
+        this.summary_list.add("/metadata/songs/title");
+        this.summary_list.add("/metadata/songs/release");
+        this.summary_list.add("/metadata/songs/artist_name");
+
+
     }
 
     private void load_path(Group group, int level){
@@ -66,6 +84,10 @@ public class H5_parser {
         }
     }
     public void storeData (){
+        if (this.is_stored){
+            System.out.println("Already store data, do nothing to avoid potential issues!");
+            return;
+        }
         for (String s:this.nodes_path_list
         ) {
             this.hdfFile.getFile();
@@ -84,6 +106,7 @@ public class H5_parser {
             }
 
         }
+        this.is_stored=true;
     }
     public void printData (){
         for (String s:this.nodes_path_list
@@ -175,6 +198,10 @@ public class H5_parser {
         return all_data;
     }
 
+    public Boolean getIs_stored() {
+        return is_stored;
+    }
+
     public GenericRecord fillSchema(Schema schema){
         return this.fillSchemaHelper(this.hdfFile,schema);
     }
@@ -217,5 +244,26 @@ public class H5_parser {
             }
         }
         return genericRecord;
+    }
+    // effect: /musicbrainz/songs/year --> year
+    // used to fetch out the record from key to insert it at correct record for song_summary
+    private String fetchLastRecord(String s){
+
+        return s.substring(s.lastIndexOf("/")+1);
+    }
+    public GenericRecord fillSummarySchema(Schema schema){
+        GenericRecord genericRecord = new GenericData.Record(schema);
+        for (String s:this.summary_list
+             ) {
+            this.all_data.forEach((key,value)->{
+                if (Objects.equals(key,s)){
+                    String last_str=fetchLastRecord(s);
+                    Object data_out = (all_data.get(key) == null)? null: ((List<?>) all_data.get(key)).get(0);
+                    genericRecord.put(last_str, data_out);
+                }
+            });
+        }
+        return genericRecord;
+
     }
 }

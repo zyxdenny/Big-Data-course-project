@@ -1,0 +1,14 @@
+{"namespace": "song_summary.avro",
+  "type": "record",
+  "name": "song_avro",
+  "fields": [
+    {"name": "year", "type": "int"},
+    {"name": "song_hotttnesss", "type": ["null","double"]},
+    {"name": "duration",  "type": "double"},
+    {"name": "energy", "type": "double"},
+    {"name": "tempo", "type": "double"},
+    {"name": "title", "type": "string"},
+    {"name": "release", "type": "string"},
+    {"name": "artist_name", "type": "string"}
+  ]
+}

@@ -22,6 +22,7 @@ public class Main {
 
         try (HdfFile hdfFile = new HdfFile(Paths.get(args[0]))) {
             Schema schema = new Schema.Parser().parse(new File("./src/avro/song.avsc"));
+            Schema summary_schema =new Schema.Parser().parse(new File("./src/avro/song_summary.avsc"));
             System.out.println(schema.getFields());
             System.out.println(hdfFile.getFile().getName()); //NOSONAR - sout in example
             H5_parser h5_parser=new H5_parser(2,hdfFile);
@@ -35,13 +36,21 @@ public class Main {
 
                 CompactSmallFiles c=new CompactSmallFiles("./src/avro/song.avsc");
                 //GenericRecord record= h5_parser.fillSchema(schema); debug usage
-                c.serialize("./test","trial_avro.txt");
+                c.serialize("./test","trial.avro");
                 System.out.println("here");
 
                 //System.out.println(h5_parser.getAll_data().toString());
             }else if (Objects.equals(args[1], "p")){
                 System.out.println("start print group!");
                 h5_parser.recursivePrintGroup(hdfFile, 0,false);
+            } else if (Objects.equals(args[1], "t")) {
+                h5_parser.storeData();
+                //GenericRecord test_record=h5_parser.fillSummarySchema(summary_schema);
+                //System.out.println(test_record);
+                CompactSmallFiles c2=new CompactSmallFiles("./src/avro/song_summary.avsc");
+                c2.serializeSummary("./test","trial_summary.avro");
+                System.out.println("finished");
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
