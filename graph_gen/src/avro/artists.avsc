@@ -1,0 +1,16 @@
+{"namespace": "artists.avro",
+  "type": "record",
+  "name": "artists_avro",
+  "fields": [
+    {"name": "artist_name", "type": "string"},
+    {"name": "artist_id", "type": "string"},
+    {"name": "artist_hotttnesss",  "type": "double"},
+    {"name": "similar_artists", "type": ["null",{
+      "type": "array",
+      "items": "string",
+      "default": []}]},
+    {"name": "artist_familiarity", "type": "double"},
+    {"name": "artist_latitude", "type": "double"},
+    {"name": "artist_longitude", "type": "double"}
+  ]
+}

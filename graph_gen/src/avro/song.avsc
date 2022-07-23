@@ -1,0 +1,625 @@
+//todo: test version, not tested yet!
+{"namespace": "song.avro",
+  "type": "record",
+  "name": "song_avro",
+  "fields": [
+    {"name":"analysis",
+      "type":{
+        "type":"record",
+        "name": "analysis",
+        "fields": [
+          {
+            "name": "bars_confidence",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []
+            }]//Unions, as mentioned above, are represented using JSON arrays. For example, ["null", "string"] declares a schema which may be either a null or string.https://avro.apache.org/docs/1.10.2/spec.html#null
+
+          },
+          {"name": "bars_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "beats_confidence",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "beats_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "sections_confidence",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "sections_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_confidence",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_loudness_max",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_loudness_max_time",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_loudness_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_pitches",
+            "type": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": "double",
+                "default": []
+              },
+              "default": "null"
+            }
+          },
+          {"name": "segments_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "segments_timbre",
+            "type": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": "double",
+                "default": []
+              },
+              "default": "null"
+            }
+          },//todo:songs
+          {
+            "name": "songs",
+            "type": {
+              "type": "record",
+              "name": "songs",
+              "fields": [
+                {
+                  "name": "analysis_sample_rate",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "audio_md5",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "danceability",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "duration",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "end_of_fade_in",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "energy",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "idx_bars_confidence",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_bars_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_beats_confidence",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_beats_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_sections_confidence",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_sections_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_confidence",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_loudness_max",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_loudness_max_time",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_loudness_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_pitches",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_segments_timbre",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_tatums_confidence",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_tatums_start",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "key",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "key_confidence",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "loudness",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "mode",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "mode_confidence",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "start_of_fade_out",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "tempo",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "time_signature",
+                  "type": {
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "time_signature_confidence",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "track_id",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                }
+              ]
+            }
+          },
+          {"name": "tatums_confidence",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "tatums_start",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          }
+          /*{
+            "name": "test",
+            "type": "array",
+            "items":"double",
+            "default": []
+          }*/ //The type of the "test" field must be a defined name or a {"type": ...} expression.
+        ]
+      }
+    },
+    {"name": "metadata",
+      "type":{
+        "type": "record",
+        "name": "metadata",
+        "fields": [
+          {"name": "artist_terms",
+            "type": ["null",{
+              "type": "array",
+              "items": "string",
+              "default": []}]
+          },
+          {"name": "artist_terms_freq",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "artist_terms_weight",
+            "type": ["null",{
+              "type": "array",
+              "items": "double",
+              "default": []}]
+          },
+          {"name": "similar_artists",
+            "type": ["null",{
+              "type": "array",
+              "items": "string",
+              "default": []}]
+          },
+          {
+            "name": "songs",
+            "type": {
+              "type": "record",
+              "name": "metadata_songs",
+              "fields": [
+                {
+                  "name": "analyzer_version",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_7digitalid",
+                  "type": {
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_familiarity",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_hotttnesss",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_id",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_latitude",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_location",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_longitude",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_mbid",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_name",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "artist_playmeid",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "genre",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "idx_artist_terms",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "idx_similar_artists",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                },
+                {
+                  "name": "release",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "release_7digitalid",
+                  "type": [{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  },"null"],
+                  "default": []
+                },
+                {
+                  "name": "song_hotttnesss",
+                  "type": {
+                    "type": "array",
+                    "items": "double",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "song_id",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "title",
+                  "type": {
+                    "type": "array",
+                    "items": "string",
+                    "default": []
+                  }
+                },
+                {
+                  "name": "track_7digitalid",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []
+                  }]
+                }
+              ]
+            }
+          }
+
+        ]
+      }},
+    {"name": "musicbrainz",
+      "type":{
+        "type": "record",
+        "name": "musicbrainz",
+        "fields": [
+          {"name": "artist_mbtags",
+            "type": ["null",{
+              "type": "array",
+              "items": "string",
+              "default": []}]
+          },
+          {"name": "artist_mbtags_count",
+            "type": ["null",{
+              "type": "array",
+              "items": "int",
+              "default": []}]
+          },
+          {"name": "songs",
+            "type": {
+              "type": "record",
+              "name": "musicbrainz_songs",
+              "fields": [
+                {
+                  "name": "idx_artist_mbtags",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []}]
+                },
+                {
+                  "name": "year",
+                  "type": ["null",{
+                    "type": "array",
+                    "items": "int",
+                    "default": []}]
+                }
+              ]
+            }
+          }
+
+        ]
+      }}
+  ]
+}
