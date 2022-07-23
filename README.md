@@ -1,6 +1,7 @@
-### Usage
+### HDF5 to AVRO Usage
 
 ```shell
+cd HDF5_process
 mvn clean install
 mvn compile
 mvn exec:java "-Dexec.args=[command line arguments]"
@@ -30,6 +31,25 @@ mvn exec:java "-Dexec.args=[command line arguments]"
   * `----artists`: compact only necessary data information for map-reduce and spark job
 
 More features under development
+
+### AVRO to ADJ_MAT Usage
+
+```shell
+cd graph_gen
+mvn clean install
+mvn compile
+mvn exec:java "-Dexec.args=[command line arguments]"
+#mvn exec:java "-Dexec.args=trial_artists.avro adj_mat"
+```
+
+#### Specification of command line arguments (temporaily)
+
+* input `avro` file
+* output adjacent matrix file
+
+More features under development
+
+
 
 ### Simple database query
 
