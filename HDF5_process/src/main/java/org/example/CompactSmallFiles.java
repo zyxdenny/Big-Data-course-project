@@ -127,6 +127,12 @@ public class CompactSmallFiles {
     }
 
     public void readDir(String dirName) {
+        this.readDirHelper(dirName);
+        is_file_load=true;
+        System.out.println(this.all_files.size());
+    }
+
+    public void readDirHelper(String dirName) {
         Path Path;
         Path= Paths.get(dirName);
         //test for path correctness
@@ -146,7 +152,7 @@ public class CompactSmallFiles {
                 }
                 if (Files.isDirectory(file)){
                     System.out.println("Dir find:"+file.toAbsolutePath());
-                    readDir(file.toAbsolutePath().toString());
+                    readDirHelper(file.toAbsolutePath().toString());
                 }
 
             }
@@ -155,8 +161,6 @@ public class CompactSmallFiles {
             // In this snippet, it can only be thrown by newDirectoryStream.
             System.err.println();
         }
-        is_file_load=true;
-        System.out.println(this.all_files.size());
     }
 
     public void printDir() throws IOException {
