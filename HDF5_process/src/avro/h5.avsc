@@ -1,9 +1,0 @@
-{"namespace": "h5.avro",
-  "type": "record",
-  "name": "h5_avro",
-  "fields": [
-    {"name": "filename", "type": "string"},
-    {"name": "filecontent",  "type": "bytes"},
-    {"name": "checksum", "type": "string"}
-  ]
-}

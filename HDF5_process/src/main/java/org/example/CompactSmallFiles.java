@@ -126,6 +126,39 @@ public class CompactSmallFiles {
 
     }
 
+    public void serializeArtists(String h5_dir,String out_name) throws IOException {
+        if (!is_file_load){
+            System.out.println("File not loaded in!");
+            System.out.println("Now we load h5 files in "+h5_dir);
+            this.readDir(h5_dir);
+        }
+        System.out.println("Serialize initialize ......");
+        Schema schema = new Schema.Parser().parse(new File(this.avsc_dir));
+        Schema schemaBackup= new Schema.Parser().parse(new File(this.avsc_dir));
+        DatumWriter<GenericRecord> DatumWriter = new GenericDatumWriter<GenericRecord>(schema);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(DatumWriter);
+        dataFileWriter.create(schema, new File(out_name));
+
+        String initialize_message="Serialize begins, target dir: "+ all_files.get(0).toRealPath().getParent();
+        System.out.println(initialize_message);
+        for (Path file:this.all_files
+        ) {
+            String file_name = file.getFileName().toString();
+            StringBuilder SHA_text = new StringBuilder();
+            Charset charset = StandardCharsets.US_ASCII;
+            //todo set data to special field
+            H5_parser h5_parser = new H5_parser(1, new HdfFile(file));
+            h5_parser.storeData();
+
+
+            GenericRecord genericRecord = h5_parser.fillArtistsSchema(schemaBackup);
+            dataFileWriter.append(genericRecord);
+        }
+        dataFileWriter.close();
+        System.out.println("Serialize finished!");
+
+
+    }
     public void readDir(String dirName) {
         this.readDirHelper(dirName);
         is_file_load=true;

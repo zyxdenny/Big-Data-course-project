@@ -21,12 +21,14 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String all_schema_path = new String("./src/avro/song.avsc");
         String summary_schema_path = new String("./src/avro/song_summary.avsc");
+        String artists_schema_path = new String("./src/avro/artists.avsc");
         Schema schema = new Schema.Parser().parse(new File(all_schema_path));
-        Schema summary_schema =new Schema.Parser().parse(new File(summary_schema_path));
+        Schema summary_schema = new Schema.Parser().parse(new File(summary_schema_path));
+        Schema artists_schema = new Schema.Parser().parse(new File(artists_schema_path));
         if (Objects.equals(args[0], "h5")) {
             try (HdfFile hdfFile = new HdfFile(Paths.get(args[1]))) {
                 H5_parser h5_parser = new H5_parser(2, hdfFile);
-                //h5_parser.printPath();
+                h5_parser.printPath();
                 if (Objects.equals(args[2], "-pd")) {
                     h5_parser.printData();
                 } else if (Objects.equals(args[2], "-pt")) {
@@ -53,6 +55,10 @@ public class Main {
             } else if (Objects.equals(args[1], "--read")) {
                 CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
                 c2.readDir("./test");
+            } else if (Objects.equals(args[1], "--artists")) {
+                CompactSmallFiles c2=new CompactSmallFiles(artists_schema_path);
+                c2.serializeArtists("./test","trial_artists.avro");
+                System.out.println("finished");
             }
         }
 

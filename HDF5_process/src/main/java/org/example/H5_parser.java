@@ -17,6 +17,7 @@ public class H5_parser {
     int para=0;
     private HdfFile hdfFile;
     private List<String> summary_list = new ArrayList<String>();
+    private List<String> artists_list = new ArrayList<String>();
 
     private Boolean is_stored = false;
     private List<String> nodes_path_list=new ArrayList<String>();
@@ -29,6 +30,7 @@ public class H5_parser {
         }
         this.load_path(hdfFile,0);
         this.summary_list_init();
+        this.artists_list_init();
 
     }
 
@@ -43,6 +45,16 @@ public class H5_parser {
         this.summary_list.add("/metadata/songs/artist_name");
 
 
+    }
+
+    private void artists_list_init (){
+        this.artists_list.add("/metadata/songs/artist_name");
+        this.artists_list.add("/metadata/songs/artist_id");
+        this.artists_list.add("/metadata/songs/artist_hotttnesss");
+        this.artists_list.add("/metadata/songs/artist_latitude");
+        this.artists_list.add("/metadata/songs/artist_longitude");
+        this.artists_list.add("/metadata/songs/artist_familiarity");
+        this.artists_list.add("/metadata/similar_artists");
     }
 
     private void load_path(Group group, int level){
@@ -266,6 +278,26 @@ public class H5_parser {
                 if (Objects.equals(key,s)){
                     String last_str=fetchLastRecord(s);
                     Object data_out = (all_data.get(key) == null)? null: ((List<?>) all_data.get(key)).get(0);
+                    genericRecord.put(last_str, data_out);
+                }
+            });
+        }
+        return genericRecord;
+
+    }
+
+    public GenericRecord fillArtistsSchema(Schema schema){
+        GenericRecord genericRecord = new GenericData.Record(schema);
+        for (String s:this.artists_list
+        ) {
+            this.all_data.forEach((key,value)->{
+                if (Objects.equals(key,s)){
+                    String last_str=fetchLastRecord(s);
+
+                    Object data_out = (all_data.get(key) == null)? null: ((List<?>) all_data.get(key)).get(0);
+                    if (Objects.equals(key,"/metadata/similar_artists")){
+                        data_out=all_data.get(key);
+                    }
                     genericRecord.put(last_str, data_out);
                 }
             });

@@ -27,6 +27,7 @@ mvn exec:java "-Dexec.args=[command line arguments]"
   * `--all`: compact all data information (not drill-friendly)
   * `--summary`: compact only necessary data information (drill-friendly)
   * `--read`: test the `readDir` function (will print the dir name under the parent folders and the number of h5 file added to the avro compact) 
+  * `----artists`: compact only necessary data information for map-reduce and spark job
 
 More features under development
 
