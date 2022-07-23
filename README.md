@@ -1,3 +1,35 @@
+### Usage
+
+```shell
+mvn clean install
+mvn compile
+mvn exec:java "-Dexec.args=[command line arguments]"
+```
+
+#### Specification of command line arguments (temporaily)
+
+* h5 related operations
+
+  `-Dexec.args=h5 [h5 file location] [h5 option]]`
+
+  with h5 options support
+
+  * `-pd`: print the data stored in the `h5` file (compound data like `songs` will be printed in fields respectively)
+  * `-pt` print the data type of each field in the `h5` file （Note: if data is `Null`, the data type will be `null`)
+  * `-pg` print the group information in the `h5` file
+
+* avro related operations
+
+  * `-Dexec.args=avro [avro option]]`
+
+  with avro options support
+
+  * `--all`: compact all data information (not drill-friendly)
+  * `--summary`: compact only necessary data information (drill-friendly)
+  * `--read`: test the `readDir` function (will print the dir name under the parent folders and the number of h5 file added to the avro compact) 
+
+More features under development
+
 ### Simple database query
 
 * The age of Oldest and youngest songs

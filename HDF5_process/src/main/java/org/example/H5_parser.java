@@ -144,7 +144,12 @@ public class H5_parser {
                     System.out.println(key.toString()+" "+value.getClass());
                 });
             }else {
+                if (data == null){
+                    System.out.println("Null");
+                    continue;
+                }
                 System.out.println(ArrayUtils.toString(data.getClass()));
+
             }
 
         }

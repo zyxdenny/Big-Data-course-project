@@ -18,45 +18,42 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Main {
     //todo: commandline parser
-    public static void main(String[] args) {
-
-        try (HdfFile hdfFile = new HdfFile(Paths.get(args[0]))) {
-            Schema schema = new Schema.Parser().parse(new File("./src/avro/song.avsc"));
-            Schema summary_schema =new Schema.Parser().parse(new File("./src/avro/song_summary.avsc"));
-            System.out.println(schema.getFields());
-            System.out.println(hdfFile.getFile().getName()); //NOSONAR - sout in example
-            H5_parser h5_parser=new H5_parser(2,hdfFile);
-            h5_parser.printPath();
-            if (Objects.equals(args[1], "1")){
-                h5_parser.printData();
-            } else if (Objects.equals(args[1], "2")) {
-                h5_parser.printDataType();
-            }else if (Objects.equals(args[1], "3")){
-                System.out.println("Avro begin!");
-
-                CompactSmallFiles c=new CompactSmallFiles("./src/avro/song.avsc");
+    public static void main(String[] args) throws IOException {
+        String all_schema_path = new String("./src/avro/song.avsc");
+        String summary_schema_path = new String("./src/avro/song_summary.avsc");
+        Schema schema = new Schema.Parser().parse(new File(all_schema_path));
+        Schema summary_schema =new Schema.Parser().parse(new File(summary_schema_path));
+        if (Objects.equals(args[0], "h5")) {
+            try (HdfFile hdfFile = new HdfFile(Paths.get(args[1]))) {
+                H5_parser h5_parser = new H5_parser(2, hdfFile);
+                //h5_parser.printPath();
+                if (Objects.equals(args[2], "-pd")) {
+                    h5_parser.printData();
+                } else if (Objects.equals(args[2], "-pt")) {
+                    h5_parser.printDataType();
+                } else if (Objects.equals(args[2], "-pg")) {
+                    System.out.println("start print group!");
+                    h5_parser.recursivePrintGroup(hdfFile, 0,false);
+                }
+            }
+        }else if (Objects.equals(args[0], "avro")){
+            System.out.println("Avro Mode");
+            if (Objects.equals(args[1], "--all"))
+            {
+                CompactSmallFiles c=new CompactSmallFiles(all_schema_path);
                 //GenericRecord record= h5_parser.fillSchema(schema); debug usage
                 c.serialize("./test","trial.avro");
                 System.out.println("here");
-
-                //System.out.println(h5_parser.getAll_data().toString());
-            }else if (Objects.equals(args[1], "p")){
-                System.out.println("start print group!");
-                h5_parser.recursivePrintGroup(hdfFile, 0,false);
-            } else if (Objects.equals(args[1], "t")) {
-                h5_parser.storeData();
+            } else if (Objects.equals(args[1], "--summary")) {
                 //GenericRecord test_record=h5_parser.fillSummarySchema(summary_schema);
                 //System.out.println(test_record);
-                CompactSmallFiles c2=new CompactSmallFiles("./src/avro/song_summary.avsc");
+                CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
                 c2.serializeSummary("./test","trial_summary.avro");
                 System.out.println("finished");
-
-            }else if (Objects.equals(args[1], "a")){
-                CompactSmallFiles c2=new CompactSmallFiles("./src/avro/song_summary.avsc");
+            } else if (Objects.equals(args[1], "--read")) {
+                CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
                 c2.readDir("./test");
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
 
