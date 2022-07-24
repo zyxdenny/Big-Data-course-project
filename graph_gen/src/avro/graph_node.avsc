@@ -1,0 +1,13 @@
+{"namespace": "graph_node.avro",
+  "type": "record",
+  "name": "graph_node_avro",
+  "fields": [
+    {"name": "artist_id", "type": "string"},
+    {"name": "similar_artists", "type": ["null",{
+      "type": "array",
+      "items": "string",
+      "default": []}]},
+    {"name": "distance", "type": "int"},
+    {"name": "state", "type": "int"}
+  ]
+}
