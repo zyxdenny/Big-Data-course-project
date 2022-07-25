@@ -59,6 +59,12 @@ public class Main {
                 CompactSmallFiles c2=new CompactSmallFiles(artists_schema_path);
                 c2.serializeArtists("./test","trial_artists.avro");
                 System.out.println("finished");
+            }else if (Objects.equals(args[1], "--nartists")) {
+                int number=Integer.parseInt(args[2]);
+                assert number >= 0;
+                CompactSmallFiles c2=new CompactSmallFiles(artists_schema_path);
+                c2.serializeArtists_N("./test","trial_summary_"+args[2]+".avro",number);
+
             }
         }
 
