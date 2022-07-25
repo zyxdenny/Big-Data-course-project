@@ -35,7 +35,7 @@ for key, group in iter_group:
                 dist = dist_tmp
             
             if status_tmp == 1:
-                status == 1
+                status = 1
 
     
     print(''.join((id, '|', ' '.join(adj), '|', str(dist), '|', str(status))))
