@@ -60,9 +60,15 @@ def reducer(data0, data1):
     return reduceResult
 
 if __name__ == '__main__':
-    inputPath = 'data/adj_mat'
-    outputPath = 'output'
-    sourceName = 'ARCXPYP1187FB37123'
+    import sys
+    if len(sys.argv) == 0:
+        inputPath = 'data/adj_mat'
+        outputPath = 'output'
+        sourceName = 'ARCXPYP1187FB37123'
+    else:
+        inputPath = sys.argv[1]
+        outputPath = sys.argv[2]
+        sourceName = sys.argv[3]
     rdd = takeTxtInput(inputPath, sourceName)
     max_iter = 20
     for iter in range(max_iter):
