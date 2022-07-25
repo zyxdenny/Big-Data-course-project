@@ -101,3 +101,4 @@ HDF5_process/test/
 
 # bfs-spark-output
 bfs-spark/output
+graph_gen/target
