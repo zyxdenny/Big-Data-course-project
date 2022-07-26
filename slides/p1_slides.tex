@@ -1,0 +1,242 @@
+\documentclass{beamer}
+\usetheme{CambridgeUS}
+\usecolortheme{dolphin}
+
+\usepackage[greek,english]{babel}
+\usepackage[OT2,OT1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{latexsym}
+%\usepackage[scheme=plain]{ctex}
+%\usepackage{tikz}
+\usepackage{verbatim}
+
+\newenvironment{command}{\begin{block}{Command}}{\end{block}}
+\newcommand{\samplebegin}[1]{\structure{\textbackslash begin}\{#1\}}
+\newcommand{\sampleend}[1]{\structure{\textbackslash end}\{#1\}}
+\newcommand{\samplecommand}[1]{\alert{\textbackslash #1}}
+\newcommand{\samplecolorbox}[1]{\fcolorbox{black}{#1}{\color{#1}{\tiny{\phantom{0000}}}} \small{#1}}
+\newcommand{\sampletext}[2]{\samplecommand{#1} - {#2{Sample Text}}}
+\newcommand{\sampleaccent}[3]{\samplecommand{#1}\{#3\}\quad #2{#3}}
+\newcommand{\samplesymbol}[2]{\samplecommand{#1}\quad #2}
+
+% Copied from lshort.sty
+%
+% Symbol Entry for Math Symbol Tables
+%
+\newcommand{\X}[1]{$#1$&\texttt{\string#1}\hspace*{1ex}}
+% normal text ....
+\newcommand{\SC}[1]{#1&\texttt{\string#1}\hspace*{1ex}}
+% for accents in text mode
+\newcommand{\A}[1]{#1&\texttt{\string#1}\hspace*{1ex}}
+\newcommand{\B}[2]{#1#2&\texttt{\string#1{} #2}\hspace*{1ex}}
+
+\newcommand{\W}[2]{$#1{#2}$&
+  \texttt{\string#1}\texttt{\string{\string#2\string}}\hspace*{1ex}}
+\newcommand{\Y}[1]{$\big#1$ &\texttt{\string#1}}  %
+% Mathsymbol Table
+\newsavebox{\symbbox}
+\newenvironment{symbols}[1]%
+{\par\vspace*{2ex}
+\renewcommand{\arraystretch}{1.1}
+\begin{lrbox}{\symbbox}
+\hspace*{4ex}\begin{tabular}{@{}#1@{}}}%
+{\end{tabular}\end{lrbox}\makebox[\linewidth]{\usebox{\symbbox}}\par\medskip}
+%
+% Some commands for helping with INDEX creation
+%
+\newcommand{\bs}{\symbol{'134}}%Print backslash
+%\newcommand{\bs}{\ensuremath{\mathtt{\backslash}}}%Print backslash
+% Index entry for a command (\cih for hidden command index
+\newcommand{\eei}[1]{%
+\index{extension!\texttt{#1}}\texttt{#1}}
+% probably add handling of period like handling of \ in \ci
+\newcommand{\fni}[1]{%
+\index{font!#1@\texttt{\bs#1}}%
+\index{#1@\texttt{\hspace*{-1.2ex}\bs #1}}\texttt{\bs #1}}
+\newcommand{\cih}[1]{%
+\index{commands!#1@\texttt{\bs#1}}%
+\index{#1@\texttt{\hspace*{-1.2ex}\bs #1}}}
+\newcommand{\ci}[1]{\cih{#1}\texttt{\bs #1}}
+%Package
+\newcommand{\paih}[1]{%
+\index{packages!#1@\textsf{#1}}%
+\index{#1@\textsf{#1}}}
+\newcommand{\pai}[1]{%
+\paih{#1}\textsf{#1}}
+% Index entry for an environment
+\newcommand{\ei}[1]{%
+\index{environments!\texttt{#1}}%
+\index{#1@\texttt{#1}}%
+\texttt{#1}}
+% Indexentry for a word (Word inserted into the text)
+\newcommand{\wi}[1]{\index{#1}#1}
+
+\usepackage{minted}
+\usemintedstyle{autumn}
+\setminted{
+    linenos,
+    breaklines,
+    fontsize=\footnotesize,
+    tabsize=4,
+    xleftmargin=2em
+}
+\setmintedinline{
+	fontsize=\footnotesize
+}
+\newcommand{\LC}[1]{\mintinline{latex}{ #1 }}
+\newcommand{\LCL}[1]{\begin{minted}{latex}{
+#1
+}
+\end{minted}
+}
+
+\newcommand{\myhref}[1]{{\color{blue}\url{#1}}}
+\renewcommand{\multirowsetup}{\centering}  
+
+\title{ECE4721J --- Methods and Tools for Big Data}
+\author{p1team-01}
+\date{\today}
+\subtitle{Million Song Dataset (MSD) Analysis Tools}
+\institute{UM-JI (Summer 2022)}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{HDF5 file process}
+\begin{frame}
+	\tableofcontents[currentsection,hideothersubsections]
+\end{frame}
+
+\subsection{Basic Setup}
+\begin{frame}
+	\frametitle{Overview}
+	\begin{itemize}
+		\item Maven-managed Java Project
+		\begin{itemize}
+		\item Cross-platform 
+		\item Easy to install new packages (compared with c++) 
+		\item Easy to manage different packages (compared with Python \mintinline{Python}{import})
+		\end{itemize}
+		\item Avro
+		\begin{itemize}
+		\item Easy to be integrate into Java project as part of Apache Ecosystem
+		\item Can be easy accessd and processed by Drill and Spark easily
+		\item Compact small files together to avoid waste of memory in HDFS
+		\item More freedom in data retrieve
+		\end{itemize}
+	
+	\end{itemize}	
+\end{frame}
+
+\subsection{HDF5 file related feature}
+\begin{frame}
+	\frametitle{HDF5 file related feature}
+	HDF5 file related functions are implemented within \mintinline{Java}{H5_parser} class
+	\begin{itemize}
+		\item \mintinline{Java}{H5_parser.recursivePrintGroup}: Print all the group information stored in selected h5 file
+		\item \mintinline{Java}{H5_parser.printData}: Print all the data with its paths. The compound data will be print separately.
+		\item \mintinline{Java}{H5_parser.printDataType}: Print the data type of each field in the HDF5 file.
+	\end{itemize}
+	
+\end{frame}
+
+\subsection{Avro related feature}
+\begin{frame}
+	\frametitle{Overview}
+	Basically, we provide three kinds of avro compact method.
+	\begin{itemize}
+		\item \mintinline{Java}{song}: Compact all the information with respect to its field and the final results will be separated into analysis, metadata and musicbrainz in Drill
+		\item \mintinline{Java}{song_summary}: Compact only the information required for Drill process to provide Drill-friendly avro file
+		\item \mintinline{Java}{artists}: Compact only the information required for constructing graph for advanced analysis feature. You can manually generate for a test but not recommended.
+	\end{itemize}
+	
+\end{frame}
+\begin{frame}
+	\frametitle{Avro related feature}
+	Avro related functions are implemented within \mintinline{Java}{CompactSmallFiles} class
+	\begin{itemize}
+		\item \mintinline{Java}{CompactSmallFiles.serialize}: compact all the h5 files within the folder in \mintinline{Java}{song} mode
+		\item \mintinline{Java}{CompactSmallFiles.serializeSummary}: compact all the h5 files within the folder in \mintinline{Java}{song_summary} mode
+		\item \mintinline{Java}{CompactSmallFiles.serializeArtists}: compact all the h5 files within the folder in \mintinline{Java}{artists} mode
+		\item \mintinline{Java}{CompactSmallFiles.serializeArtists_N}: compact defined number of h5 files within the folder in \mintinline{Java}{artists} mode
+		\item \mintinline{Java}{CompactSmallFiles.readDir}: store all the h5 file into the avro process class within the folder and print the number of files store
+	\end{itemize}
+	
+\end{frame}
+
+
+\section{Map Reduce}
+\begin{frame}
+	\tableofcontents[currentsection,hideothersubsections]
+\end{frame}
+
+\subsection{Define a template}
+
+\begin{frame}[fragile]
+	\frametitle{template}
+	Template as a special class see Page 331:
+	\begin{minted}{cpp}
+#include <iostream>
+using namespace std;
+template<class TYPE>
+class Complex {
+public:
+Complex(){ R = I = (TYPE)0; }
+Complex(TYPE real, TYPE img) {R=real;I=img;}
+void PrintComplex() {cout<<R<<'+'<<I<<"i\n";}
+private:
+TYPE R, I;
+};
+\end{minted}
+	Basic Usage, insert the TYPE with proper datatype :
+	\begin{minted}{matlab}
+Complex<float> c1; complex<int> c2;
+typedef Complex<double> dcplx; dcplx c3;
+\end{minted}
+If you turn to cppreference, TYPE is more often written as T.
+\end{frame}
+
+
+
+
+\section{Spark}
+\begin{frame}
+	\tableofcontents[currentsection,hideothersubsections]
+\end{frame}
+
+\subsection{Basic concepts}
+\begin{frame}
+	\frametitle{Standard Template Library}
+\end{frame}
+
+\section{Reference}
+\begin{frame}
+	\frametitle{Reference}
+	\begin{thebibliography}{}
+		\bibitem{ref1}[1] 1
+	\end{thebibliography}
+\end{frame}
+
+
+
+\end{document}
