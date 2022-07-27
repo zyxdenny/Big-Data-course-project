@@ -126,7 +126,43 @@ public class CompactSmallFiles {
 
     }
 
+    public void serializeSummary_N(String h5_dir,String out_name,int number) throws IOException {
+        if (!is_file_load){
+            System.out.println("File not loaded in! We will load h5 files in"+h5_dir);
+            this.readDir(h5_dir);
+        }
+        if (number > this.all_files.size()){
+            System.out.println("The files under the folder "+h5_dir+" is not enough, compact all instead");
+            this.serializeSummary(h5_dir,out_name);
+            return;
+        }
+        System.out.println("Serialize initialize ......");
+        Schema schema = new Schema.Parser().parse(new File(this.avsc_dir));
+        Schema schemaBackup= new Schema.Parser().parse(new File(this.avsc_dir));
+        DatumWriter<GenericRecord> DatumWriter = new GenericDatumWriter<GenericRecord>(schema);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(DatumWriter);
+        dataFileWriter.create(schema, new File(out_name));
 
+        //String initialize_message="Serialize begins, target dir: "+ all_files.get(0).toRealPath().getParent();
+        //System.out.println(initialize_message);
+        int count=0;
+        for (Path file:this.all_files
+        ) {
+            if (count >= number){
+                break;
+            }
+            H5_parser h5_parser = new H5_parser(1, new HdfFile(file));
+            h5_parser.storeData();
+            GenericRecord genericRecord = h5_parser.fillSummarySchema(schemaBackup);
+            dataFileWriter.append(genericRecord);
+            count ++;
+            System.out.println("Progress: "+ count +"/"+number);
+        }
+        dataFileWriter.close();
+        System.out.println("Serialize finished!");
+
+
+    }
 
     public void serializeArtists(String h5_dir,String out_name) throws IOException {
         if (!is_file_load){
@@ -164,8 +200,7 @@ public class CompactSmallFiles {
 
     public void serializeArtists_N(String h5_dir,String out_name,int number) throws IOException {
         if (!is_file_load){
-            System.out.println("File not loaded in!");
-            System.out.println("Now we load h5 files in "+h5_dir);
+            System.out.println("File not loaded in! We will load h5 files in"+h5_dir);
             this.readDir(h5_dir);
         }
         if (number > this.all_files.size()){
@@ -180,25 +215,20 @@ public class CompactSmallFiles {
         DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(DatumWriter);
         dataFileWriter.create(schema, new File(out_name));
 
-        String initialize_message="Serialize begins, target dir: "+ all_files.get(0).toRealPath().getParent();
-        System.out.println(initialize_message);
+        //String initialize_message="Serialize begins, target dir: "+ all_files.get(0).toRealPath().getParent();
+        //System.out.println(initialize_message);
         int count=0;
         for (Path file:this.all_files
         ) {
             if (count >= number){
                 break;
             }
-            String file_name = file.getFileName().toString();
-            StringBuilder SHA_text = new StringBuilder();
-            Charset charset = StandardCharsets.US_ASCII;
-            //todo set data to special field
             H5_parser h5_parser = new H5_parser(1, new HdfFile(file));
             h5_parser.storeData();
-
-
             GenericRecord genericRecord = h5_parser.fillArtistsSchema(schemaBackup);
             dataFileWriter.append(genericRecord);
             count ++;
+            System.out.println("Progress: "+ count +"/"+number);
         }
         dataFileWriter.close();
         System.out.println("Serialize finished!");
@@ -208,7 +238,7 @@ public class CompactSmallFiles {
     public void readDir(String dirName) {
         this.readDirHelper(dirName);
         is_file_load=true;
-        System.out.println(this.all_files.size());
+        System.out.println("H5 files found in selected path"+this.all_files.size());
     }
 
     public void readDirHelper(String dirName) {

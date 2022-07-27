@@ -52,7 +52,14 @@ public class Main {
                 CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
                 c2.serializeSummary("./test","trial_summary.avro");
                 System.out.println("finished");
-            } else if (Objects.equals(args[1], "--read")) {
+            } else if (Objects.equals(args[1], "--nsummary")) {
+                int number=Integer.parseInt(args[2]);
+                assert number >= 0;
+                String h5_dir=args[3];
+                CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
+                c2.serializeSummary_N(h5_dir,"trial_summary_"+args[2]+".avro",number);
+                System.out.println("finished");
+            }else if (Objects.equals(args[1], "--read")) {
                 CompactSmallFiles c2=new CompactSmallFiles(summary_schema_path);
                 c2.readDir("./test");
             } else if (Objects.equals(args[1], "--artists")) {
@@ -64,7 +71,7 @@ public class Main {
                 assert number >= 0;
                 CompactSmallFiles c2=new CompactSmallFiles(artists_schema_path);
                 String h5_dir=args[3];
-                c2.serializeArtists_N(h5_dir,"trial_summary_"+args[2]+".avro",number);
+                c2.serializeArtists_N(h5_dir,"trial_artists_"+args[2]+".avro",number);
 
             }
         }

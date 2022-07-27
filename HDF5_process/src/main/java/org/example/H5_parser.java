@@ -28,7 +28,9 @@ public class H5_parser {
         if (!this.nodes_path_list.isEmpty()){
             this.nodes_path_list.clear();
         }
+        System.out.println("H5 parser load file start...");
         this.load_path(hdfFile,0);
+        System.out.println("H5 parser load file finish...");
         this.summary_list_init();
         this.artists_list_init();
 
@@ -61,12 +63,12 @@ public class H5_parser {
         level++;
         String indent = StringUtils.repeat("    ", level);
         for (Node node : group) {
-            System.out.println(indent + node.getName()); //NOSONAR - sout in example
-            System.out.println(node.getPath());
+            //System.out.println(indent + node.getName()); //NOSONAR - sout in example
+            //System.out.println(node.getPath());
             if (node instanceof Group) {
                 load_path((Group) node, level);
             }else {
-                System.out.println(indent + "Name:"+node.getName()+" Path:"+ node.getPath()+" added");
+                //System.out.println(indent + "Name:"+node.getName()+" Path:"+ node.getPath()+" added");
                 this.nodes_path_list.add(node.getPath());
             }
         }
