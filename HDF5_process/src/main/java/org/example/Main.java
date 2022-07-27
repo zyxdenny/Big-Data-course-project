@@ -63,7 +63,8 @@ public class Main {
                 int number=Integer.parseInt(args[2]);
                 assert number >= 0;
                 CompactSmallFiles c2=new CompactSmallFiles(artists_schema_path);
-                c2.serializeArtists_N("./test","trial_summary_"+args[2]+".avro",number);
+                String h5_dir=args[3];
+                c2.serializeArtists_N(h5_dir,"trial_summary_"+args[2]+".avro",number);
 
             }
         }

@@ -9,6 +9,8 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+### Mac Files
+.DS_Store
 ### C++ template
 # Prerequisites
 *.d
