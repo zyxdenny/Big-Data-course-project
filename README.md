@@ -42,6 +42,7 @@ mvn clean install
 mvn compile
 mvn exec:java "-Dexec.args=[command line arguments]"
 #mvn exec:java "-Dexec.args=trial_artists.avro adj_mat"
+#mvn exec:java "-Dexec.args=trial_summary_10000.avro adj_mat_10000"
 ```
 
 #### Specification of command line arguments (temporaily)
