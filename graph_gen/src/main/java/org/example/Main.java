@@ -50,9 +50,10 @@ public class Main {
 
             List<Utf8> similar_artists = new ArrayList<Utf8>();
             similar_artists = (List<Utf8>) tmp.get("similar_artists") ;
-            for (Utf8 similar_artist: similar_artists){
-                content = content + similar_artist.toString() +" ";
-            }
+            if (similar_artists != null)
+                for (Utf8 similar_artist: similar_artists){
+                    content = content + similar_artist.toString() +" ";
+                }
             content = content + "|";
             content = content + "9999|0\n";
             out.write(content);
