@@ -109,11 +109,11 @@ public class H5_parser {
 
             if (data instanceof LinkedHashMap){
                 ((LinkedHashMap<?, ?>) data).forEach((key, value) -> {
-                    System.out.println("Current store "+s+"/"+key.toString()+": ");
+                    //System.out.println("Current store "+s+"/"+key.toString()+": ");
                     this.all_data.put(s+"/"+key.toString(),retrieveCompoundData(value));
                 });
             }else {
-                System.out.println("Current store "+s+": ");
+                //System.out.println("Current store "+s+": ");
                 this.all_data.put(s,retrieveCompoundData(data));
             }
 
