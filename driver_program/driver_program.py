@@ -27,8 +27,8 @@ if function == 0:
 
     if args.mode == 0:
         #spark
-        os.system('rm -r %s' %parser.output_directory)
-        os.system('python3 ../bfs-spark.py -f %d -i %s -i_d %s -o_d %s -d %d' %(args.function,args.input_id,args.input_directory,args.output_directory,args.distance) )
+        os.system('rm -r %s' %args.output_directory)
+        os.system('python3 ../bfs-spark/bfs-spark.py -f %d -i %s -i_d %s -o_d %s -d %d' %(args.function,args.input_id,args.input_directory,args.output_directory,args.distance) )
     else:
         #mapreduce
         os.system('pwd')
@@ -41,8 +41,8 @@ if function == 1:
 
     if args.mode == 0:
         #spark
-        os.system('rm -r %s' %parser.output_directory)
-        os.system('python3 ../bfs-spark.py -f %d -i %s -o %s -i_d %s -o_d %s' %(args.function,args.input_id,args.output_id,args.input_directory,args.output_directory) )
+        os.system('rm -r %s' %args.output_directory)
+        os.system('python3 ../bfs-spark/bfs-spark.py -f %d -i %s -o %s -i_d %s -o_d %s' %(args.function,args.input_id,args.output_id,args.input_directory,args.output_directory) )
 else:
         #mapreduce
         os.system('pwd')
