@@ -124,7 +124,15 @@ you can edit the input file, output directory, and the source vertex name in `bf
 #### Results
 on `adj_mat` it seems the nodes are generally not connected, almost all nodes keeps untouched after 20 iterations of bfs-spark.
 
+### MapReduce
 
+We use `mrjob` library in Python to implement BFS with MapReduce. To run the program,
+
+```
+python3 <path_to_mr.py> <path_to_adj.txt> -f <0_or_1> -i <source_id> -t <target_id> -m <max_round> -d <distance>
+```
+
+Function 0 outputs all id that are distance d away from the source node. Function 1 outputs the distance and path between source id and target id.
 
 
 
