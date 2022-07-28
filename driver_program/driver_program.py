@@ -7,6 +7,10 @@ parser.add_argument('-i', '--input_id', type=str,
                     help='set the input artist id')
 parser.add_argument('-o', '--output_id', type=str,
                     help='set the output artist id')
+parser.add_argument('-i_d', '--input_directory', type=str,
+                    help='set the input directory')
+parser.add_argument('-o_d', '--output_directory', type=str,
+                    help='set the output directory')
 parser.add_argument('-d', '--distance', type=int, default = 2,
                     help='set the expected distance')
 
@@ -23,7 +27,8 @@ if function == 0:
 
     if args.mode == 0:
         #spark
-        os.system('pwd')
+        os.system('rm -r %s' %args.output_directory)
+        os.system('python3 ../bfs-spark/bfs-spark.py -f %d -i %s -i_d %s -o_d %s -d %d' %(args.function,args.input_id,args.input_directory,args.output_directory,args.distance) )
     else:
         #mapreduce
         os.system('pwd')
@@ -36,7 +41,8 @@ if function == 1:
 
     if args.mode == 0:
         #spark
-        os.system('pwd')
-    else:
+        os.system('rm -r %s' %args.output_directory)
+        os.system('python3 ../bfs-spark/bfs-spark.py -f %d -i %s -o %s -i_d %s -o_d %s' %(args.function,args.input_id,args.output_id,args.input_directory,args.output_directory) )
+else:
         #mapreduce
         os.system('pwd')

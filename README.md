@@ -1,3 +1,13 @@
+## User Interface
+
+``` shell
+cd driver_program
+python3 driver_program.py -f 0 -m 0 -i 'ARCXPYP1187FB37123' -i_d '../data/adj_mat_10000' -o_d '../data/output' -d 5
+python3 driver_program.py -f 0 -m 0 -i 'ARCXPYP1187FB37123' -o 'ARSRNV41187FB5150E' -i_d '../data/adj_mat_10000' -o_d '../data/output'
+```
+
+## Individual component
+
 ### HDF5 to AVRO Usage
 
 ```shell
@@ -93,6 +103,28 @@ select release, count(*) from dfs.`tmp/trial_summary.avro` group by release orde
 ``` sql
 select artist_name, duration from dfs.`tmp/trial_summary.avro` order by cast(duration as float) desc limit 1;
 ```
+
+### BFS in (Py)Spark
+[reference](https://medium.com/@KerrySheldon/breadth-first-search-in-apache-spark-d274403494ca)
+Using a mapper-reducer structure with applied `flatMap`, `reduceByKey` in PySpark.
+
+**key-value**: `(vtxName, (neighbors, dist, visitLabel))`. `visitLabel` inherits the definition in `adj_mat`
+
+**mapper**: add neighborhoods of current vertex as new records
+
+**reducer**: eliminate records with same key, remain records containing shortest `dist` and newest `visitLabel`
+
+#### Usage
+```
+cd bfs-spark
+./bfs-spark.sh 
+```
+you can edit the input file, output directory, and the source vertex name in `bfs-spark/bfs-spark.sh` -- just edit these three arguments in `python3 bfs-spark.py 'data/adj_mat' 'output' 'ARCXPYP1187FB37123'` respectively.
+
+#### Results
+on `adj_mat` it seems the nodes are generally not connected, almost all nodes keeps untouched after 20 iterations of bfs-spark.
+
+
 
 
 

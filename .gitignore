@@ -100,6 +100,10 @@ xmake.lua
 .vscode
 HDF5_process/target
 HDF5_process/test/
+
+# bfs-spark-output
+bfs-spark/output
+graph_gen/target
 graph_gen/target
 graph_gen/trial_summary_10000.avro
 graph_gen_spark/
