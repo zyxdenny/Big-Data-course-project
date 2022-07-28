@@ -3,6 +3,7 @@
 ``` shell
 cd driver_program
 python3 driver_program.py -f 0 -m 0 -i 'ARCXPYP1187FB37123' -i_d '../data/adj_mat_10000' -o_d '../data/output' -d 5
+python3 driver_program.py -f 0 -m 0 -i 'ARCXPYP1187FB37123' -o 'ARSRNV41187FB5150E' -i_d '../data/adj_mat_10000' -o_d '../data/output'
 ```
 
 ## Individual component
