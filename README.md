@@ -1,3 +1,12 @@
+## User Interface
+
+``` shell
+cd driver_program
+python3 driver_program.py -f 0 -m 0 -i 'ARCXPYP1187FB37123' -i_d '../data/adj_mat_10000' -o_d '../data/output' -d 5
+```
+
+## Individual component
+
 ### HDF5 to AVRO Usage
 
 ```shell
@@ -107,11 +116,14 @@ Using a mapper-reducer structure with applied `flatMap`, `reduceByKey` in PySpar
 #### Usage
 ```
 cd bfs-spark
-./bfs-spark.sh
+./bfs-spark.sh 
 ```
 you can edit the input file, output directory, and the source vertex name in `bfs-spark/bfs-spark.sh` -- just edit these three arguments in `python3 bfs-spark.py 'data/adj_mat' 'output' 'ARCXPYP1187FB37123'` respectively.
 
 #### Results
 on `adj_mat` it seems the nodes are generally not connected, almost all nodes keeps untouched after 20 iterations of bfs-spark.
+
+
+
 
 

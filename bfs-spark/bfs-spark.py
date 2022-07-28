@@ -61,18 +61,50 @@ def reducer(data0, data1):
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) == 0:
-        inputPath = 'data/adj_mat'
-        outputPath = 'output'
-        sourceName = 'ARCXPYP1187FB37123'
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--function',type=int, choices=[0,1],help='select function for the program. 0 for getting similar artists within a given distance. 1 for getting the distance between two artists')
+    parser.add_argument('-i', '--input_id', type=str,
+                        help='set the input artist id')
+    parser.add_argument('-o', '--output_id', type=str,
+                        help='set the output artist id')
+    parser.add_argument('-i_d', '--input_directory', type=str,
+                        help='set the input directory')
+    parser.add_argument('-o_d', '--output_directory', type=str,
+                    help='set the output directory')
+    parser.add_argument('-d', '--distance', type=int, default = 2,
+                        help='set the expected distance')
+    args = parser.parse_args()
+
+    inputPath = args.input_directory
+
+    outputPath = args.output_directory
+
+    input_id = args.input_id
+
+    output_id = args.output_id
+
+    rdd = takeTxtInput(inputPath, input_id)
+    if args.function == 0:
+        max_iter = args.distance
+        for iter in range(max_iter):
+            mapped = rdd.flatMap(mapper)
+            # print(mapped.)
+            rdd = mapped.reduceByKey(reducer)
+            rdd.saveAsTextFile(outputPath)
     else:
-        inputPath = sys.argv[1]
-        outputPath = sys.argv[2]
-        sourceName = sys.argv[3]
-    rdd = takeTxtInput(inputPath, sourceName)
-    max_iter = 20
-    for iter in range(max_iter):
-        mapped = rdd.flatMap(mapper)
-        # print(mapped.)
-        rdd = mapped.reduceByKey(reducer)
-    rdd.saveAsTextFile(outputPath)
+        max_iter = 30
+        found = False
+        for iter in range(max_iter):
+            mapped = rdd.flatMap(mapper)
+            # print(mapped.)
+            rdd = mapped.reduceByKey(reducer)
+            def f(x):
+                if x[0] == output_id:
+                    print("Distance is %d"%(x[1][1]))
+                    found = True
+            rdd.foreach(f)
+            if found == True:
+                break
+        if found == False:
+            print("Fail to calculate the distance")
