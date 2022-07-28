@@ -8,8 +8,8 @@ class BFS(MRJob):
         self.add_passthru_arg('-f', '--function',type=int, choices=[0,1],help='select function for the program. 0 for getting similar artists within a given distance. 1 for getting the distance between two artists')
         self.add_passthru_arg('-i', '--input_id', type=str,
                                 help='set the input artist id')
-        self.add_passthru_arg('-o', '--output_id', type=str,
-                                help='set the output artist id')
+        self.add_passthru_arg('-t', '--target_id', type=str,
+                                help='set the target artist id')
         self.add_passthru_arg('-m', '--max_round', type=int, default = 10,
                                 help='set the maximum round of searching')
         self.add_passthru_arg('-d', '--distance', type=int, default = 2,
@@ -25,17 +25,20 @@ class BFS(MRJob):
             adj = []
         dist = int(v[2])
         status = int(v[3])
+        path = []
 
         if id == self.options.input_id:
+            path.append(id)
             status = -1
             dist = 0
             for m_id in adj:
                 m_dist = dist + 1
                 m_adj = []
                 m_status = 1
-                yield m_id, (m_adj, m_dist, m_status)
+                m_path = path + [m_id]
+                yield m_id, (m_adj, m_dist, m_status, m_path)
         
-        yield id, (adj, dist, status)
+        yield id, (adj, dist, status, path)
 
 
     def reducer(self, key, values):
@@ -43,15 +46,18 @@ class BFS(MRJob):
         adj = []
         dist = 9999
         status = 0
+        path = []
         for node in values:
             adj_tmp = node[0]
             dist_tmp = node[1]
             status_tmp = node[2]
+            path_tmp = node[3]
 
             if status_tmp == -1:
                 adj = adj_tmp
                 dist = dist_tmp
                 status = -1
+                path = path_tmp
                 break
             else:
                 if len(adj_tmp) != 0:
@@ -63,8 +69,11 @@ class BFS(MRJob):
                 if status_tmp == 1:
                     status = 1
 
+                if len(path_tmp) != 0:
+                    path = path_tmp
+
         
-        yield id, (adj, dist, status)
+        yield id, (adj, dist, status, path)
 
 
     def mapper_from_output(self, key, values):
@@ -72,6 +81,7 @@ class BFS(MRJob):
         adj = values[0]
         dist = values[1]
         status = values[2]
+        path = values[3]
 
         if status == 1:
             status = -1
@@ -79,9 +89,10 @@ class BFS(MRJob):
                 m_dist = dist + 1
                 m_adj = []
                 m_status = 1
-                yield m_id, (m_adj, m_dist, m_status)
+                m_path = path + [m_id]
+                yield m_id, (m_adj, m_dist, m_status, m_path)
         
-        yield id, (adj, dist, status)
+        yield id, (adj, dist, status, path)
 
     
     def mapper_final(self, key, values):
@@ -101,21 +112,27 @@ class BFS(MRJob):
 
     
     def reducer_final1(self, key, values):
-        if key == self.options.input_id:
+        if key == self.options.target_id:
             id = key
             dist = 9999
+            path = []
             for node in values:
                 dist_tmp = node[1]
                 status_tmp = node[2]
+                path_tmp = node[3]
 
                 if status_tmp == -1:
                     dist = dist_tmp
+                    path = path_tmp
                     break
                 else:
                     if dist_tmp < dist:
                         dist = dist_tmp
+
+                    if len(path_tmp) != 0:
+                        path = path_tmp
             
-            yield id, dist
+            yield id, (dist, path)
     
 
     def steps(self):
